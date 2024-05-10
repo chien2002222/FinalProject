@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Successful</title>
+    <!-- Thêm các link CSS và script cần thiết -->
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .content {
+            text-align: center;
+        }
+
+        .btnback {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-top: auto; /* Đảm bảo footer nằm ở dưới cùng */
+        }
+
+        /* Thêm kiểu cho thông tin phim và rạp chiếu */
+        .movie-info {
+            margin-top: 20px;
+        }
+
+        .movie-info p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- ... -->
+<div class="content">
+    <h1>Booking Successful</h1>
+    
+    <!-- Hiển thị mã QR -->
+    <div class="qr-code">
+        <img src="{{ qrCodeUrl }}" alt="QR Code" />
+    </div>
+
+    <!-- Nút để chuyển hướng về trang lịch sử đặt vé -->
+    <div>
+        <button class="btnback" onclick="window.location.href='/booking/bookings'">Back to Booking History</button>
+    </div>
+</div>
+<!-- ... -
+
+</body>
+</html>

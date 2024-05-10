@@ -1,0 +1,65 @@
+<div class="container mt-5">
+    <h1 class="mb-4">Add Show</h1>
+    {{#if errorMessage}}
+    <h3 style="color: red;">{{ errorMessage }}</h3>
+    {{/if}}
+    <form action="/theatre/add-show" method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Show Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">Date:</label>
+            <input type="date" class="form-control" id="date" name="date" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="time" class="form-label">Time:</label>
+            <input type="time" class="form-control" id="time" name="time" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="movie" class="form-label">Movie:</label>
+            <select class="form-control" name="movie" id="movie" required>
+                {{#each movies}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="ticketPrice" class="form-label">Ticket Price:</label>
+            <input type="number" class="form-control" id="ticketPrice" name="ticketPrice" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="totalSeats" class="form-label">Total Seats:</label>
+            <select class="form-control" id="totalSeats" name="totalSeats" required>
+                <option value="50">50 Seats</option>
+                <option value="70">70 Seats</option>
+                <option value="100">100 Seats</option>
+                <!-- Thêm các tùy chọn khác tùy theo nhu cầu của bạn -->
+            </select>
+        </div>
+        {{!-- <div class="mb-3">
+            <label for="totalSeats" class="form-label">Total Seats:</label>
+            <select class="form-control" id="totalSeats" name="totalSeats" required>
+                {{#each rooms}}
+                <option value="{{this.capacity}}">{{this.capacity}}</option>
+                {{/each}}
+            </select>
+        </div> --}}
+
+        <div class="mb-3">
+            <label for="theatre" class="form-label">Theatre:</label>
+            <select class="form-control" name="theatre" id="theatre" required>
+                {{#each theatres}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Show</button>
+    </form>
+</div>

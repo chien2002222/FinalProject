@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1>User Profile</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Information</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Username:</strong>
+                            {{user.username}}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email:</strong>
+                            {{user.email}}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Role:</strong>
+                            {{user.role}}
+                        </li>
+                        <!-- Các thông tin khác của người dùng có thể được hiển thị ở đây -->
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="/auth/edit" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        margin-top: 100px;
+        margin-bottom: 350px;
+    }
+</style>

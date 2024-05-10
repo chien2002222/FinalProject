@@ -1,0 +1,45 @@
+<div class="container-fluid service py-5">
+    <div class="container py-5">
+        <div class="row g-4 justify-content-center">
+            <!-- Form tìm kiếm phim theo category -->
+            <form id="categoryForm" action="/movie/search-by-category" method="POST" class="mb-4">
+                <div class="input-group">
+                    <label class="input-group-text" for="category">Category:</label>
+                    <select name="category" id="category" class="form-select">
+                        <option value="" disabled selected>Category</option>
+                        {{#each categoryList}}
+                            <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </form>
+
+            <!-- Danh sách phim -->
+            {{#each movieList}}
+            <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="service-item rounded">
+                    <div class="service-img rounded-top">
+                        <img src="{{image}}" class="img-fluid rounded-top w-100" style="width: 100%; aspect-ratio: 7/9;" alt="{{name}}">
+                    </div>
+                    <div class="service-content rounded-bottom bg-light p-4">
+                        <div class="service-content-inner">
+                            <h5 class="card-title titles">{{name}}</h5>
+                            <p class="card-text service-description">{{description}}</p>
+                            <a href="/movie/detail/{{_id}}" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-2">Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+
+
+</div>
+
+<script>
+    document.getElementById("category").addEventListener("change", function() {
+        document.getElementById("categoryForm").submit();
+    });
+</script>

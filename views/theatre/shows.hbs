@@ -1,0 +1,45 @@
+<div class="container">
+  <h1 class="my-4">All Shows</h1>
+  <a class="btn btn-warning mb-4" href="/theatre/add-show">Add Show</a>
+
+  {{#if shows}}
+    <table class="table table-striped table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Show name</th>
+          <th scope="col">Movie Name</th>
+          <th scope="col">Theatre Name</th>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">Ticket Price</th>
+          <th scope="col">Total Seats</th>
+          <th scope="col">Booked Seats</th>
+          <th scope="col">Menu</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each shows}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{movie.name}}</td>
+            <td>{{theatre.name}}</td>
+            <td>{{formatDate date}}</td>
+            <td>{{time}}</td>
+            <td>{{ticketPrice}}</td>
+            <td>{{totalSeats}}</td>
+            <td class="text-wrap">{{bookedSeats}}</td>
+            <td>
+              <a
+                class="btn btn-danger"
+                href="/theatre/deleteShow/{{_id}}"
+                onclick="return confirm('Are you sure to delete this show?');"
+              >Delete</a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p class="alert alert-info">No shows found</p>
+  {{/if}}
+</div>

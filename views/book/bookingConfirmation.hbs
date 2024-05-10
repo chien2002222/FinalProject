@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        #seatMap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            /* Khoảng cách giữa các ghế */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .seat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #444451;
+            height: 40px;
+            width: 60px;
+            margin-right: 10px;
+            border: 2px solid #314c81;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .seat span {
+            color: #fff;
+            /* Màu chữ trắng để nổi bật trên nền đen */
+        }
+
+
+        .seat.selected {
+            background-color: #007bff;
+        }
+
+        .seat.booked {
+            background-color: #dc3545;
+            cursor: not-allowed;
+        }
+
+        .movie-screen {
+            margin: 20px 0;
+        }
+
+        .movie-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .movie-container label {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .movie-container p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="movie-container">
+        <label>BOOKING</label>
+        <p><strong>Show Name:</strong> {{ booking.show.name }}</p>
+        <p><strong>Date: </strong><span id="formattedDate">{{formatDate booking.show.date }}</span> </p>
+        <p><strong>Time:</strong> {{ booking.show.time }}</p>
+    </div>
+    <div id="errorMessage"></div>
+    <ul class="showcase">
+        <li>
+            <div class="seat"></div>
+            <small>N/A</small>
+        </li>
+        <li>
+            <div class="seat selected"></div>
+            <small>Selected</small>
+        </li>
+        <li>
+            <div class="seat occupied"></div>
+            <small>Occupied</small>
+        </li>
+    </ul>
+
+    <div class="container ">
+        <div class="movie-screen">
+            <img src='/image/screen-thumb.png' alt='screen' />
+        </div>
+        <div id="seatMap">
+            <!-- Ghế sẽ được vẽ ở đây -->
+        </div>
+    </div>
+    <div class="text-wrapper">
+        <p class="text">Selected Seats: <span id='selectedSeats'></span>
+        <p class="text">Total Price: $<span id="totalPrice">0</span></p>
+        <button id="bookButton" class="btn btn-primary">Book</button>
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy ngày tháng năm từ booking.show.date
+            const bookingDate = new Date('{{ booking.show.date }}');           
+            const seatMap = document.getElementById('seatMap');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const selectedSeatsElement = document.getElementById('selectedSeats');
+            const bookButton = document.getElementById('bookButton');
+            let totalPrice = 0;
+            let selectedSeats = [];
+
+            // Số lượng ghế trong suất chiếu
+            let totalSeats = {{ booking.show.totalSeats }};
+        // Giá vé
+            let ticketPrice = {{ booking.show.ticketPrice }};
+        // Danh sách các ghế đã đặt
+            let bookedSeats = [{{ booking.show.bookedSeats }}];
+
+        // Vẽ các ghế và kiểm tra xem ghế đã đặt hay chưa
+        for (let i = 1; i <= totalSeats; i++) {
+            const seat = document.createElement('div');
+            seat.classList.add('seat');
+            seat.textContent = i;
+            if (bookedSeats.includes(i)) {
+                    seat.classList.add('booked'); // Thêm lớp 'booked' cho các ghế đã đặt
+                    seat.disabled = true; // Vô hiệu hóa ghế đã đặt
+                    seat.addEventListener('click', function () {
+                alert(`Seat ${i} is already booked.`); // Hiển thị thông báo khi người dùng nhấp vào ghế đã đặt
+            });
+            } else {
+                seat.addEventListener('click', function () {
+                    if (!seat.classList.contains('selected')) {
+                        seat.classList.add('selected');
+                        totalPrice += ticketPrice;
+                        selectedSeats.push(i);
+                    } else {
+                        seat.classList.remove('selected');
+                        totalPrice -= ticketPrice;
+                        selectedSeats = selectedSeats.filter(seatNumber => seatNumber !== i);
+                    }
+                    totalPriceElement.textContent = totalPrice;
+                    selectedSeatsElement.textContent = selectedSeats.join(', '); // Hiển thị danh sách ghế đã chọn
+                });
+            }
+            seatMap.appendChild(seat);
+        }
+
+        // Sự kiện click cho nút "Book"
+        bookButton.addEventListener('click', function () {
+                // Kiểm tra xem người dùng đã chọn ghế chưa
+                if (selectedSeats.length === 0) {
+                    alert('Please select at least one seat before booking.'); // Hiển thị thông báo nếu người dùng chưa chọn ghế
+                    return; // Ngắt việc thực hiện hàm nếu không có ghế nào được chọn
+                }
+
+            // Gửi thông tin đặt vé lên server
+            fetch('/booking/book-show/{{ booking.show._id }}', { method: 'POST', body: JSON.stringify({ seats: selectedSeats }), headers: { 'Content-Type': 'application/json' } })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Seats have been selected! ' );
+                    }
+                    return response.json();})
+                .then(data => {
+                      fetch('/booking/pay', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    // Chuyển hướng đến URL phê duyệt của PayPal
+                    window.location.href = data.approval_url;
+                })
+                
+                })
+                .catch(error => {
+                    console.error('Error booking:', error);
+                    document.getElementById('errorMessage').textContent = 'Booking failed: ' + error.message; });
+        });
+        });
+    </script>
+</body>
+
+</html>

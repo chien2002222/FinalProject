@@ -1,0 +1,68 @@
+<div class="container mt-1">
+    <!-- Search form -->
+    <form class="mb-4" action="/movie/search" method="post">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search movies..." name="keyword" />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Movie List</h1>
+        <a class="btn btn-warning" href="/movie/add">Add</a>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Movie Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Director</th>
+                    <th scope="col">Actors</th>
+                    <th scope="col">Release Date</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Trailer</th>
+                    <th scope="col">Language</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Menu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each movieList}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{description}}</td>
+                    <td>{{director}}</td>
+                    <td>{{actors}}</td>
+                    <td>{{releaseDate}}</td>
+                    <td>{{duration}}</td>
+                    <td>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" src="{{trailerURL}}" allowfullscreen></iframe>
+                        </div>
+                    </td>
+                    <td>{{language}}</td>
+                    <td>
+                        {{#each categories}}
+                        <span class="badge badge-primary">{{this.name}}</span>
+                        {{/each}}
+                    </td>
+
+                    <td><img src="{{image}}" width="100" height="100" alt="{{name}}" class="img-fluid" /></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-warning btn-sm" href="/movie/edit/{{_id}}">Edit</a>
+                            <a class="btn btn-danger btn-sm" href="/movie/delete/{{_id}}"
+                                onclick="return confirm('Are you sure to delete this movie');">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

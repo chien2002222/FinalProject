@@ -1,0 +1,93 @@
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ movie.name }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ movie.image }}" alt="{{ movie.name }} Image" class="img-fluid mb-3">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="{{ movie.trailerURL }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Description:</strong> {{ movie.description }}</li>
+                        <li class="list-group-item"><strong>Director:</strong> {{ movie.director }}</li>
+                        <li class="list-group-item"><strong>Actors:</strong> {{ movie.actors }}</li>
+                        <li class="list-group-item"><strong>Release Date:</strong> {{ movie.releaseDate }}</li>
+                        <li class="list-group-item"><strong>Duration:</strong> {{ movie.duration }}</li>
+                        <li class="list-group-item"><strong>Language:</strong> {{ movie.language }}</li>
+                        <li class="list-group-item"><strong>Category:</strong>
+                            {{#if movie.categories}}
+                            {{#each movie.categories}}
+                            {{#if @first}}
+                            {{this.name}}
+                            {{else}}
+                            , {{this.name}}
+                            {{/if}}
+                            {{/each}}
+                            {{else}}
+                            No categories available
+                            {{/if}}
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <!-- Phần chọn ngày -->
+                        <h3>Choose date</h3>
+                        <input type="date" id="datePicker" onchange="getShowtimes('{{ movie._id }}')"
+                            min="{{ currentDate }}"  value="{{ currentDate }}">
+                        <ul class="list-group mt-3" id="showtimesList">
+                            <!-- Danh sách giờ chiếu sẽ được cập nhật bởi JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        window.onload = function() {
+        getShowtimes('{{ movie._id }}');
+    };
+        // Hàm để gửi yêu cầu lấy giờ chiếu dựa trên ngày đã chọn
+        function getShowtimes(movieId) {
+            const selectedDate = document.getElementById('datePicker').value;
+            fetch(`/movie/api/showtimes?movieId=${movieId}&date=${selectedDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    const showtimesList = document.getElementById('showtimesList');
+                    showtimesList.innerHTML = ''; // Xóa danh sách giờ chiếu hiện tại
+
+                    let previousTheatre = null; // Biến để theo dõi rạp phim đã được hiển thị
+                    data.forEach(show => {
+                        // Kiểm tra nếu rạp phim đã được hiển thị trước đó
+                        if (show.theatre._id !== previousTheatre) {
+                            const theatreItem = document.createElement('li');
+                            theatreItem.classList.add('list-group-item', 'list-group-item-primary');
+                            theatreItem.textContent = show.theatre.name;
+                            showtimesList.appendChild(theatreItem); // Thêm tên rạp phim vào danh sách
+                            previousTheatre = show.theatre._id; // Cập nhật rạp phim đã hiển thị
+                        }
+
+                        // Tạo thẻ 'a' để chuyển hướng đến trang book của show đó
+                        const showtimeItem = document.createElement('a');
+                        showtimeItem.classList.add('list-group-item');
+                        showtimeItem.textContent = `${show.time}`;
+                        showtimeItem.href = `/booking/book-show/${show._id}`; // Đặt href để chuyển hướng đến trang book
+                        showtimesList.appendChild(showtimeItem); // Thêm mỗi giờ chiếu vào danh sách
+                    });
+                })
+                .catch(error => console.error('Error fetching showtimes:', error));
+        }
+        function getCurrentDate() {
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Thêm số 0 đằng trước nếu cần
+            const day = currentDate.getDate().toString().padStart(2, '0'); // Thêm số 0 đằng trước nếu cần
+            return `${year}-${month}-${day}`;
+        }
+    </script>

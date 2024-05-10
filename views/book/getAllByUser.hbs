@@ -1,0 +1,53 @@
+<div class="container mt-5">
+  <h1 class="mb-4">Your Bookings</h1>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Show name</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Movie</th>
+        <th>Theatre</th>
+        <th>Seats</th>
+        <th>Total Price</th>
+        <th>QR Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each bookings}}
+        <tr>
+          <td>{{this.show.name}}</td>
+          <td>{{formatDate this.show.date}}</td>
+          <td>{{this.show.time}}</td>
+          <td>{{this.show.movie.name}}</td>
+          <td>{{this.show.theatre.name}}</td>
+          <td>{{this.seats}}</td>
+          <td>${{this.totalPrice}}</td>
+          <td><img
+              src="{{this.qrCodeUrl}}"
+              alt="QR Code"
+              style="max-width: 100px;"
+            /></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+<style>
+  .copyright{
+    position: fixed;
+        bottom: 0;
+  }
+</style>
+
+<!-- Bootstrap JS and Popper.js -->
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"
+></script>
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+></script>

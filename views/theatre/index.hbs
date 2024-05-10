@@ -1,0 +1,36 @@
+<div class="container mt-5">
+    <h1>Theatre List</h1>
+
+    <a class="btn btn-warning mb-3" href="/theatre/add">Add</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Menu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each theatreList}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{address}}</td>
+                    <td>{{phone}}</td>
+                    <td>{{email}}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-warning btn-sm" href="/theatre/edit/{{_id}}">Edit</a>
+                            <a class="btn btn-danger btn-sm" href="/theatre/delete/{{_id}}"
+                                onclick="return confirm('Are you sure to delete this branch');">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
